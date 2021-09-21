@@ -40,6 +40,25 @@ namespace DogGo.Controllers
             return View(owner);
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: WalkersController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
     }
 }
