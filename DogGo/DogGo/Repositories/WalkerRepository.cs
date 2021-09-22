@@ -73,7 +73,7 @@ namespace DogGo.Repositories
 
                     cmd.Parameters.AddWithValue("@id", id);
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    using (var reader = cmd.ExecuteReader())
 
                     if (reader.Read())
                     {
