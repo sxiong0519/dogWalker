@@ -1,9 +1,8 @@
-﻿@model IEnumerable<DogGo.Models.Owner>
-@*can only be set one time only - the model variable in our view is going to set to an instance of IEnumerable to set for Model*@
+﻿@model IEnumerable<DogGo.Models.Dog>
+
 @{
     ViewData["Title"] = "Index";
 }
-@*View data is the name of the object for tab*@
 
 <h1>Index</h1>
 
@@ -17,19 +16,19 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Address)
+                @Html.DisplayNameFor(model => model.OwnerId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NeighborhoodId)
+                @Html.DisplayNameFor(model => model.Breed)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
             </th>
             <th></th>
         </tr>
@@ -41,19 +40,19 @@
                 @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Address)
+                @Html.DisplayFor(modelItem => item.OwnerId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NeighborhoodId)
+                @Html.DisplayFor(modelItem => item.Breed)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phone)
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
