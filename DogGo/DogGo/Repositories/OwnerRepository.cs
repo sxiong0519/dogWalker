@@ -72,8 +72,8 @@ namespace DogGo.Repositories
                         NeighborhoodId, n.Name AS 'Neighborhood Name', d.Id AS 'Dog Id', 
                         d.Name AS 'Dog Name', d.Breed AS 'Dog Breed'
                         FROM Owner o 
-                        JOIN Neighborhood n ON o.NeighborhoodId = n.Id
-                        JOIN Dog d ON d.OwnerId = o.Id
+                        LEFT JOIN Neighborhood n ON o.NeighborhoodId = n.Id
+                        LEFT JOIN Dog d ON d.OwnerId = o.Id
                         WHERE o.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -104,6 +104,7 @@ namespace DogGo.Repositories
                                     Name = reader.GetString(reader.GetOrdinal("Neighborhood Name"))
                                 };
                             }
+                            
                             if (!reader.IsDBNull(reader.GetOrdinal("Dog Id")))
                             {
                                 owner.Dogs.Add(new Dog
