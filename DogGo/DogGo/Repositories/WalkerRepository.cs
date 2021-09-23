@@ -66,36 +66,66 @@ namespace DogGo.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, [Name], ImageUrl, NeighborhoodId
-                        FROM Walker
-                        WHERE Id = @id
-                    ";
+                                        SELECT w.Id AS 'WalkerId', w.Name AS 'WalkerName', w.ImageUrl as 'Walker Avatar', 
+                                        n.Id AS 'Neighborhood Id', n.Name AS 'Neighborhood Name', wa.Id AS 'Walks Id', Date, Duration, d.Id AS 'Dog Id', 
+                                        d.Name AS 'Dog Name', o.Id AS 'Owner Id', o.Name AS 'Owner Name'
+                                        FROM Walker w
+                                        LEFT JOIN Neighborhood n ON w.NeighborhoodId = n.Id
+                                        LEFT JOIN Walks wa ON wa.WalkerId = w.Id
+                                        LEFT JOIN Dog d ON wa.DogId = d.Id
+                                        LEFT JOIN Owner o ON o.Id = d.OwnerId                        
+                                        WHERE w.Id = @id
+                                    ";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
+                    Walker walker = null;
                     using (var reader = cmd.ExecuteReader())
-
-                    if (reader.Read())
                     {
-                        Walker walker = new Walker
+                        while (reader.Read())
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
-                            ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                            NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
-                        };
-
-                        reader.Close();
+                            if (walker == null)
+                            {
+                                walker = new Walker
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("WalkerId")),
+                                    Name = reader.GetString(reader.GetOrdinal("WalkerName")),
+                                    ImageUrl = reader.GetString(reader.GetOrdinal("Walker Avatar")),
+                                    Neighborhood = new Neighborhood
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("Neighborhood Id")),
+                                        Name = reader.GetString(reader.GetOrdinal("Neighborhood Name"))
+                                    },
+                                    Walks = new List<Walk>()
+                                };
+                            }
+                            if (!reader.IsDBNull(reader.GetOrdinal("Walks Id")))
+                            {
+                                walker.Walks.Add(new Walk
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("Walks Id")),
+                                    Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                                    Duration = reader.GetInt32(reader.GetOrdinal("Duration")),
+                                    Dog = new Dog
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("Dog Id")),
+                                        Name = reader.GetString(reader.GetOrdinal("Dog Name")),
+                                        Owner = new Owner
+                                        {
+                                            Id = reader.GetInt32(reader.GetOrdinal("Owner Id")),
+                                            Name = reader.GetString(reader.GetOrdinal("Owner Name"))
+                                        }
+                                    }
+                                });
+                            }
+                        }
                         return walker;
                     }
-                    else
-                    {
-                        reader.Close();
-                        return null;
-                    }
-                }
+                    
+                }                                       
             }
         }
+        
 
         public List<Walker> GetWalkersInNeighborhood(int neighborhoodId)
         {

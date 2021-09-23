@@ -32,6 +32,7 @@ namespace DogGo.Controllers
         {
             Walker walker = _walkerRepo.GetWalkerById(id);
 
+
             if (walker == null)
             {
                 return NotFound();
