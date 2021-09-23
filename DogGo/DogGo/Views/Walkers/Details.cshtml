@@ -7,45 +7,65 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Walker</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Neighborhood.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Neighborhood.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class="col-sm-10">
-            <img class="bg-info" src="@Model.ImageUrl" alt="avatar" />
-        </dd>
-        <dt class="col-sm-2">
-            <label class="font-weight-bold">Dogs: </label>
-        </dt>
-        <dd class="col-sm-10">            
-            <ul>
+    <h1 class="mb-4">Walker Profile</h1>
+
+    <section class="container">
+        <img style="width:100px;float:left;margin-right:20px"
+             src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Font_Awesome_5_regular_user-circle.svg" />
+        <div>
+            <label class="font-weight-bold">Name:</label>
+            <span>@Model.Name</span>
+        </div>
+        <div>
+            <label class="font-weight-bold">Neighborhood</label>
+            <span>@Model.Neighborhood.Name</span>
+        </div>
+    </section>
+
+    <hr class="mt-5" />
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <section class="col-8 container mt-5">
+            <h1 class="text-left">Recent Walks</h1>
+
+            <dl class="row">
                 @foreach (Walk walks in Model.Walks)
                 {
-                <li>@walks.Dog.Name</li>
+                    <dt class="col-sm-2">
+                        <label class="font-weight-bold">Date</label>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @walks.Date
+                    </dd>
+                    <dt class="col-sm-2">
+                        <label class="font-weight-bold">Client</label>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @walks.Dog.Owner.Name
+                    </dd>
+                    <dt class="col-sm-2">
+                        <label class="font-weight-bold">Duration</label>
+                    </dt>
+                    <dd class="col-sm-10">
+                        @walks.Duration
+                    </dd>
+                }
+            </dl>
+        </section>
+
+        <section class="col-lg-4 col-md-8 container mt-5">
+            <h1>Total Walk Time</h1>
+            <ul class="list-group mt-4">
+                @foreach (Walk walks in Model.Walks)
+                {
+                    walks.TotalWalkTime += walks.Duration;
+                    @walks.TotalWalkTime
+
                 }
             </ul>
-        </dd>
-    </dl>
+        </section>
+    </div>
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

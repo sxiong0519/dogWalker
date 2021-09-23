@@ -12,5 +12,6 @@ namespace DogGo.Models
         public int Duration { get; set; }
         public Walker Walker { get; set; }
         public Dog Dog { get; set; }
+        public int TotalWalkTime { get; set; } = 0;
     }
 }
