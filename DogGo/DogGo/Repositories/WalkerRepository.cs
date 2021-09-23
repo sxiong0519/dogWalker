@@ -67,19 +67,20 @@ namespace DogGo.Repositories
                 {
                     cmd.CommandText = @"
                                         SELECT w.Id AS 'WalkerId', w.Name AS 'WalkerName', w.ImageUrl as 'Walker Avatar', 
-                                        n.Id AS 'Neighborhood Id', n.Name AS 'Neighborhood Name', wa.Id AS 'Walks Id', Date, Duration, DogId, d.Name AS 'Dog Name', 
-                                        o.Id AS 'Owner Id', o.Name AS 'Owner Name'
+                                        n.Id AS 'Neighborhood Id', n.Name AS 'Neighborhood Name', wa.Id AS 'Walks Id', Date, Duration, d.Id AS 'Dog Id', 
+                                        d.Name AS 'Dog Name', o.Id AS 'Owner Id', o.Name AS 'Owner Name'
                                         FROM Walker w
                                         LEFT JOIN Neighborhood n ON w.NeighborhoodId = n.Id
-                                        LEFT JOIN Walks wa ON wa.Id = w.Id
+                                        LEFT JOIN Walks wa ON wa.WalkerId = w.Id
                                         LEFT JOIN Dog d ON wa.DogId = d.Id
                                         LEFT JOIN Owner o ON o.Id = d.OwnerId                        
                                         WHERE w.Id = @id
                                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
+
                     Walker walker = null;
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -95,19 +96,19 @@ namespace DogGo.Repositories
                                         Id = reader.GetInt32(reader.GetOrdinal("Neighborhood Id")),
                                         Name = reader.GetString(reader.GetOrdinal("Neighborhood Name"))
                                     },
-                                    Walks = new List<Walks>()
+                                    Walks = new List<Walk>()
                                 };
                             }
                             if (!reader.IsDBNull(reader.GetOrdinal("Walks Id")))
                             {
-                                walker.Walks.Add(new Walks
+                                walker.Walks.Add(new Walk
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("Walks Id")),
                                     Date = reader.GetDateTime(reader.GetOrdinal("Date")),
                                     Duration = reader.GetInt32(reader.GetOrdinal("Duration")),
                                     Dog = new Dog
                                     {
-                                        Id = reader.GetInt32(reader.GetOrdinal("DogId")),
+                                        Id = reader.GetInt32(reader.GetOrdinal("Dog Id")),
                                         Name = reader.GetString(reader.GetOrdinal("Dog Name")),
                                         Owner = new Owner
                                         {
@@ -115,14 +116,13 @@ namespace DogGo.Repositories
                                             Name = reader.GetString(reader.GetOrdinal("Owner Name"))
                                         }
                                     }
-                                }
-                                );
+                                });
                             }
                         }
-
                         return walker;
                     }
-                }             
+                    
+                }                                       
             }
         }
         
