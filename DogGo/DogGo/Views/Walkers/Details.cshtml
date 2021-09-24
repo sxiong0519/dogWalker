@@ -1,17 +1,15 @@
-﻿@model DogGo.Models.Walker
+﻿         @model DogGo.Models.Walker
 
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
 
 <div>
     <h1 class="mb-4">Walker Profile</h1>
 
     <section class="container">
         <img style="width:100px;float:left;margin-right:20px"
-             src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Font_Awesome_5_regular_user-circle.svg" />
+             src="@Model.ImageUrl" />
         <div>
             <label class="font-weight-bold">Name:</label>
             <span>@Model.Name</span>
@@ -26,43 +24,30 @@
     <div class="clearfix"></div>
 
     <div class="row">
-        <section class="col-8 container mt-5">
+        <section class="col-8 container">
             <h1 class="text-left">Recent Walks</h1>
-
-            <dl class="row">
+            <table class="table table-bordered table-responsive table-hover">
+                <tr>
+                    <th>Date</th>
+                    <th>Client </th>
+                    <th>Duration</th>
+                </tr>
                 @foreach (Walk walks in Model.Walks)
                 {
-                    <dt class="col-sm-2">
-                        <label class="font-weight-bold">Date</label>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @walks.Date
-                    </dd>
-                    <dt class="col-sm-2">
-                        <label class="font-weight-bold">Client</label>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @walks.Dog.Owner.Name
-                    </dd>
-                    <dt class="col-sm-2">
-                        <label class="font-weight-bold">Duration</label>
-                    </dt>
-                    <dd class="col-sm-10">
-                        @walks.Duration
-                    </dd>
+                    <tr>
+                        <td>@walks.Date.ToShortDateString()</td>
+                        <td>@walks.Dog.Owner.Name</td>
+                        <td>@walks.Duration mins</td>
+                    </tr>
+
                 }
-            </dl>
-        </section>
+            </table>
+</section>
 
         <section class="col-lg-4 col-md-8 container mt-5">
             <h1>Total Walk Time</h1>
             <ul class="list-group mt-4">
-                @foreach (Walk walks in Model.Walks)
-                {
-                    walks.TotalWalkTime += walks.Duration;
-                    @walks.TotalWalkTime
-
-                }
+                @Model.Walks.Sum(s => s.Duration);
             </ul>
         </section>
     </div>

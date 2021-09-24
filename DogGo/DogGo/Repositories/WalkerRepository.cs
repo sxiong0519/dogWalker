@@ -75,6 +75,7 @@ namespace DogGo.Repositories
                                         LEFT JOIN Dog d ON wa.DogId = d.Id
                                         LEFT JOIN Owner o ON o.Id = d.OwnerId                        
                                         WHERE w.Id = @id
+                                        ORDER BY o.Name
                                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
